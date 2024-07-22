@@ -33,8 +33,13 @@ import jakarta.enterprise.context.RequestScoped;
 import jakarta.inject.Inject;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityTransaction;
-import jakarta.ws.rs.GET;
+import jakarta.ws.rs.DELETE;
+import jakarta.ws.rs.PUT;
 import jakarta.ws.rs.Path;
+import jakarta.ws.rs.PathParam;
+import jakarta.ws.rs.WebApplicationException;
+import static jakarta.ws.rs.core.Response.Status.NOT_FOUND;
+import java.math.BigInteger;
 
 /**
  * The Forum resource.
@@ -52,12 +57,12 @@ public class ForumResource {
     private ApplicationBean application;
 
     /**
-     * Create forum.
+     * Create a forum.
      *
      * @return the forum.
      */
     @Path("")
-    @GET
+    @PUT
     public Forum create() {
         EntityManager em = application.getEntityManager();
         EntityTransaction tx = em.getTransaction();
@@ -68,6 +73,30 @@ public class ForumResource {
         em.persist(forum);
         em.flush();
         tx.commit();
+        return forum;
+    }
+
+    /**
+     * Delete a forum.
+     *
+     * @param id the id of the forum.
+     * @return the forum.
+     */
+    @Path("{id}")
+    @DELETE
+    public Forum delete(@PathParam("id") BigInteger id) {
+        EntityManager em = application.getEntityManager();
+        Forum forum = em.find(Forum.class, id);
+        if (forum != null) {
+        EntityTransaction tx = em.getTransaction();
+            tx.begin();
+            forum = em.merge(forum);
+            em.remove(forum);
+            em.flush();
+            tx.commit();
+        } else {
+            throw new WebApplicationException(NOT_FOUND);
+        }
         return forum;
     }
 }

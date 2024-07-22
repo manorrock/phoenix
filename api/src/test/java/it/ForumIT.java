@@ -34,6 +34,7 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.net.http.HttpResponse.BodyHandlers;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import org.junit.jupiter.api.Test;
 
@@ -53,5 +54,16 @@ class ForumIT {
         HttpResponse<String> response = client.send(request, BodyHandlers.ofString());
         System.out.println(response.body());
         assertTrue(response.body().trim().length() > 0);
+    }
+ 
+    @Test
+    void testDeleteNonExisting() throws Exception {
+        HttpClient client = HttpClient.newHttpClient();
+        HttpRequest request = HttpRequest
+                .newBuilder(new URI("http://localhost:8080/api/forum/9999999999"))
+                .DELETE()
+                .build();
+        HttpResponse<String> response = client.send(request, BodyHandlers.ofString());
+        assertEquals(404, response.statusCode());
     }
 }
