@@ -27,5 +27,5 @@ jobs:
         password: ${{ secrets.DOCKER_PASSWORD }}
     - name: Push to GHCR
       run: |
-        cd repo
+        cd api
         mvn -P docker install docker:build docker:push
