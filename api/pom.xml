@@ -4,7 +4,7 @@
     <parent>
         <artifactId>project</artifactId>
         <groupId>com.manorrock.phoenix</groupId>
-        <version>24.7.0-SNAPSHOT</version>
+        <version>24.8.0</version>
     </parent>
     <groupId>com.manorrock.phoenix</groupId>
     <artifactId>phoenix-api</artifactId>
